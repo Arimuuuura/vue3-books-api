@@ -46,6 +46,7 @@
 		<p>ISBNコード：{{ detail.isbn }}</p>
 	</div>
 </div>
+<button @click="back">戻る</button>
 </template>
 
 <script>
@@ -54,6 +55,11 @@ export default {
 		detail() {
 			const index = parseInt(this.$route.params.id)
 			return this.$store.getters.getDetailByIndex(index)
+		}
+	},
+	methods: {
+		back() {
+			this.$router.push('/search');
 		}
 	}
 }

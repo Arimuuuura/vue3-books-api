@@ -1,4 +1,9 @@
 import { createStore } from 'vuex'
+import { VuexPersistence } from 'vuex-persist'
+
+const vuexPersist = new VuexPersistence({
+  storage: localStorage
+})
 
 export default createStore({
   state: {
@@ -7,15 +12,16 @@ export default createStore({
   },
   getters: {
     getAll: (state) => {
+      console.log(state.results);
       return state.results
     },
     getDetailByIndex: (state) => (index) => {
-      console.log(state, index);
-      console.log(state.results[0][index].Item);
       return state.results[0][index].Item
     }
   },
   mutations: {
+    // ローカルストレージに保存する設定
+    RESTORE_MUTATION: vuexPersist.RESTORE_MUTATION,
     save(state, newResults) {
       state.results = []
       state.results.push(newResults)
@@ -24,5 +30,8 @@ export default createStore({
   actions: {
   },
   modules: {
-  }
+  },
+  plugins: [
+    vuexPersist.plugin
+  ]
 })
