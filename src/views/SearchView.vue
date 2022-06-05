@@ -4,34 +4,39 @@
 	<input v-model="keyword" type="text">
     <button @click="getData">検索</button>
   </div>
-  <div v-if="hasResult">
-    <ul>
-		<li v-for="result in results" :key="result.index">
-		{{ result.Item.title }}
-		{{ result.Item.subTitle }}
-		{{ result.Item.author }}
-		{{ result.Item.salesDate }}
-		<img :src="result.Item.largeImageUrl" :alt="result.Item.title" />
-		</li>
-	</ul>
+  <div class="text-center my-5" v-if="hasResult">
+    <div class="mb-5">
+      <h3>「{{ keyword }}」の検索結果</h3>
+    </div>
+    <div class="row">
+      <BookCard :results="results" />
+    </div>
   </div>
+  <p v-else>{{ message }}</p>
 </template>
 
 <script>
 import axios from "axios";
+import BookCard from "@/components/BookCard.vue";
 
 export default {
 	name: 'SearchView',
+	components: {
+		BookCard
+	},
 	data() {
 		return {
+			message: '',
 			keyword: '',
-			results: []
+			results: this.$store.getters.getAll
 		}
 	},
-	methods: {
+	computed: {
 		hasResult() {
 			return this.results.length;
 		},
+	},
+	methods: {
 		getData() {
 			if(!this.keyword) return
 
@@ -45,8 +50,12 @@ export default {
 			}
 			axios.get(SEARCH_URL, {params})
 			.then((res) => {
-				this.results = res.data.Items
-				console.log(this.results);
+				if(res.data.Items.length) {
+					this.results = res.data.Items
+					this.$store.commit('save', res.data.Items);
+				} else {
+					this.message = '該当するものはありません'
+				}
 			})
 			.catch((err) => {
 				console.error(err);
