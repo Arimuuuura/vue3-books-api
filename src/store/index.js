@@ -1,14 +1,9 @@
 import { createStore } from 'vuex'
+import SearchViewState from "./SearchViewState";
+
 
 export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
   modules: {
-  }
+    SearchViewState
+  },
 })
