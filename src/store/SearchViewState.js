@@ -68,7 +68,7 @@ export default {
   actions: {
     getResults({commit}, key) {
       commit('getResults', key)
-    }
+    },
   },
   plugins: [
     vuexPersist.plugin
